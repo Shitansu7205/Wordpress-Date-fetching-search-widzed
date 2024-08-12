@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Form</title>
+    <style>
+        /* Basic CSS for form layout */
+        #bookingForm {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: white !important;
+        }
+
+        input[type="date"],
+        input[type="number"],
+        select {
+            width: calc(100% - 12px);
+            /* Adjust width to fit within form */
+            padding: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+            background-color: #ffffff78;
+            color: black;
+        }
+
+        button[type="submit"] {
+            background-color: #ffffff78;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #FDF5EF;
+            color: #003134;
+        }
+
+        .mphb_sc_checkout-wrapper input, 
+        .mphb_sc_checkout-wrapper select, 
+        body .select2-container .select2-selection--single {
+            background-color: #ffffff78;
+            width: 126px;
+            border-radius: 3px;
+        }
+
+        .select2-selection__rendered {
+            color: black !important;
+        }
+
+        /* CSS for mobile screen */
+        @media (max-width: 600px) {
+            #bookingForm {
+                max-width: 100%;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                display: flex;
+                flex-wrap: wrap;
+                /* Allow items to wrap to new line on smaller screens */
+                justify-content: center;
+                flex-direction: column;
+                position: relative;
+                top: 431px;
+                margin-bottom: 430px;
+            }
+
+            label {
+                color: #e5d7ce !important;
+            }
+
+            input[type="date"],
+            input[type="number"],
+            select {
+                width: 100%;
+                /* Adjust width to fit within form */
+                padding: 6px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                box-sizing: border-box;
+                margin-left: -10px;
+            }
+
+            button[type="submit"] {
+                background-color: #003134;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                width: 100%;
+                /* Full width on smaller screens */
+                margin-top: 10px;
+                /* Adjust spacing */
+            }
+
+            button[type="submit"]:hover {
+                background-color: #FDF5EF;
+                color: #003134;
+            }
+
+            .mphb_sc_checkout-wrapper input, 
+            .mphb_sc_checkout-wrapper select, 
+            body .select2-container .select2-selection--single {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form id="bookingForm" method="post">
+        <div>
+            <label for="hotelSelect">Hotel Name</label>
+            <select id="hotelSelect" class="form-control" style="padding: 11px; height: 45px; background-color: #ffffff78;">
+                <option value="" style="color:black;">Noha Villa</option>
+            </select>
+        </div>
+        <br>
+        <div>
+            <label for="checkin">Check-in</label>
+            <input type="date" id="checkin" name="checkinDate" required>
+        </div>
+        <div>
+            <label for="checkout">Check Out</label>
+            <input type="date" id="checkout" name="checkoutDate" required>
+        </div>
+        <div>
+            <label for="numberOfRooms">Number of Rooms</label>
+            <input type="number" id="numberOfRooms" name="numberOfRooms" min="1" required>
+        </div>
+        <div>
+            <label for="numberOfPersons">Number of Persons</label>
+            <input type="number" id="numberOfPersons" name="numberOfPersons" min="1" required>
+        </div>
+        <button type="submit" id="bookNowButton" style="height:40px; margin-top:30px">Book Now</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var hotelSelect = document.getElementById('hotelSelect');
+            var checkin = document.getElementById('checkin');
+            var checkout = document.getElementById('checkout');
+
+            document.getElementById('bookNowButton').addEventListener('click', function (event) {
+                // Prevent default form submission
+                event.preventDefault();
+
+                var hotelSelectedUrl = "https://noahvilla.pripgo.com/property?q=";
+                var propertyId = "6885"; // Property ID for Noha Villa
+
+                // Fetch date values
+                var checkinDate = new Date(checkin.value);
+                var checkoutDate = new Date(checkout.value);
+
+                // Ensure dates are valid
+                if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
+                    alert('Please select valid check-in and check-out dates.');
+                    return;
+                }
+
+                // Convert dates to timestamps
+                var checkinTimestamp = checkinDate.getTime();
+                var checkoutTimestamp = checkoutDate.getTime();
+
+                // Create query string
+                var query = btoa(checkinTimestamp + "|" + checkoutTimestamp + "|" + propertyId + "||||||google");
+
+                // Redirect user
+                window.location.href = hotelSelectedUrl + query;
+            });
+        });
+    </script>
+</body>
+</html>
