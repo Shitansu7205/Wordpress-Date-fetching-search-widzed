@@ -1,1 +1,218 @@
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
+        .hotel-search-box {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+
+        .col-md-4, .col-md-2, .col-md-12, .col-sm-4, .col-sm-6, .col-12 {
+            padding: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #9e6202;
+        }
+
+        button {
+            background-color: #9e6202;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #7e4f01;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 767px) {
+            .hotel-search-box {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .col-md-4,
+            .col-md-2,
+            .col-md-12 {
+                width: 100%;
+                padding: 5px;
+            }
+
+            .form-control {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            input[type="date"] {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 991px) {
+            .col-md-4,
+            .col-md-2 {
+                width: 48%;
+            }
+
+            .col-md-12 {
+                width: 100%;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+
+        /* Large screen (Desktop) Styles */
+        @media (min-width: 992px) {
+            .col-md-4 {
+                width: 26%;
+            }
+
+            .col-md-2 {
+                width: 20%;
+            }
+
+            .col-md-12 {
+                width: 40%;
+            }
+
+            button {
+                font-size: 16px;
+            }
+
+            input[type="date"] {
+                font-size: 16px;
+            }
+            .hotel-search-box{
+                width: 100%;
+            }
+        }
+    </style>
+
+
+    <div class="hotel-search-box">
+        <div class="test">
+            <div class="form-group">
+                
+                <div class="col-md-4 col-sm-4 col-lg-3">
+                    <select id="hotelSelect" class="form-control" style="padding:11px">
+                        <option>Our Hotels</option>
+                        <option value="7268">Veuragamlika</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 col-sm-6 col-lg-3">
+                    <div class="input-group input-append date" id="checkin">
+                        <input type="date" class="search_date" name="date_from" placeholder="Check In" id="checkinDate">
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-sm-6 col-lg-3">
+                    <div class="input-group input-append date" id="checkout">
+                        <input type="date" class="search_date" name="date_from" placeholder="Check Out" id="checkoutDate">
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-12 col-lg-3">
+                    <button id="bookNowButton" class="form-control">Book Now</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var selectedValue;
+            var hotelSelect = document.getElementById('hotelSelect');
+            var checkin = document.getElementById('checkinDate');
+            var checkout = document.getElementById('checkoutDate');
+
+            hotelSelect.addEventListener('change', function () {
+                selectedValue = this.value;
+            });
+
+            document.getElementById('bookNowButton').addEventListener('click', function () {
+                var hotelSelectedUrl = "";
+                switch (selectedValue) {
+                    case "7268":
+                        hotelSelectedUrl = "https://pinevalleyresorts.pripgo.com/property?q=";
+                        break;
+                    
+                    default:
+                        alert('Please select a hotel!');
+                        return;
+                }
+
+                // Fetch the selected dates
+                var checkinDate = checkin.value; // String in YYYY-MM-DD format
+                var checkoutDate = checkout.value; // String in YYYY-MM-DD format
+
+                if (!checkinDate || !checkoutDate) {
+                    alert("Please select both check-in and check-out dates.");
+                    return;
+                }
+
+                var checkinTimestamp = new Date(checkinDate).getTime();
+                var checkoutTimestamp = new Date(checkoutDate).getTime();
+
+                if (checkinTimestamp >= checkoutTimestamp) {
+                    alert("Check-out date must be later than check-in date.");
+                    return;
+                }
+
+                // Base64 encode query data
+                var query = btoa(checkinTimestamp + "|" + checkoutTimestamp + "|" + selectedValue + "||||||google");
+
+                // Redirect to the selected hotel's URL with the query string
+                window.location.href = hotelSelectedUrl + query;
+                return false;
+            });
+        });
+    </script>
