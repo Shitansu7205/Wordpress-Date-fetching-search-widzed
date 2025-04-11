@@ -1,0 +1,72 @@
+
+'use client';
+import React, { useState } from 'react';
+
+const HotelSearchBox = () => {
+  const [hotel, setHotel] = useState('');
+  const [checkin, setCheckin] = useState('');
+  const [checkout, setCheckout] = useState('');
+
+  const handleBooking = () => {
+    if (!hotel) {
+      alert('Please select a hotel!');
+      return;
+    }
+    if (!checkin || !checkout) {
+      alert('Please select both check-in and check-out dates.');
+      return;
+    }
+
+    const checkinTime = new Date(checkin).getTime();
+    const checkoutTime = new Date(checkout).getTime();
+
+    if (checkinTime >= checkoutTime) {
+      alert("Check-out date must be later than check-in date.");
+      return;
+    }
+
+    let hotelUrl = '';
+    switch (hotel) {
+      case '7268':
+        hotelUrl = 'https://pinevalleyresorts.pripgo.com/property?q=';
+        break;
+      default:
+        alert('Invalid hotel selected.');
+        return;
+    }
+
+    const query = btoa(`${checkinTime}|${checkoutTime}|${hotel}||||||google`);
+    window.location.href = hotelUrl + query;
+  };
+
+  return (
+    <div className="hotel-search-box">
+      <div className="form-group">
+        <select value={hotel} onChange={e => setHotel(e.target.value)} className="form-control">
+          <option value="">Our Hotels</option>
+          <option value="7268">Veuragamlika</option>
+        </select>
+
+        <input
+          type="date"
+          value={checkin}
+          onChange={e => setCheckin(e.target.value)}
+          className="form-control"
+        />
+
+        <input
+          type="date"
+          value={checkout}
+          onChange={e => setCheckout(e.target.value)}
+          className="form-control"
+        />
+
+        <button onClick={handleBooking} className="form-control">
+          Book Now
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default HotelSearchBox;
