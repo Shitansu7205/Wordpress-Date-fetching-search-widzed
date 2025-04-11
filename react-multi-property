@@ -1,0 +1,108 @@
+
+'use client'
+import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const HotelBooking = () => {
+  const [hotelId, setHotelId] = useState("6213");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+
+  const handleBookNow = () => {
+    if (!hotelId) {
+      toast.error("Please select a hotel.");
+      return;
+    }
+    if (!checkIn) {
+      toast.error("Please select a check-in date.");
+      return;
+    }
+    if (!checkOut) {
+      toast.error("Please select a check-out date.");
+      return;
+    }
+
+    const checkinDate = new Date(checkIn);
+    const checkoutDate = new Date(checkOut);
+
+    if (checkinDate >= checkoutDate) {
+      toast.error("Check-out must be later than check-in.");
+      return;
+    }
+
+    let baseUrl = "";
+    switch (hotelId) {
+      case "6212":
+        baseUrl = "https://hyphennoida.pripgo.com/property?q=";
+        break;
+      case "6213":
+        baseUrl = "https://hyphenharidwar.pripgo.com/property?q=";
+        break;
+      case "6214":
+        baseUrl = "https://hyphenmeerut.pripgo.com/property?q=";
+        break;
+      default:
+        toast.error("Invalid hotel selection.");
+        return;
+    }
+
+    const encoded = btoa(
+      `${checkinDate.getTime()}|${checkoutDate.getTime()}|${hotelId}||||||google`
+    );
+
+    window.location.href = `${baseUrl}${encoded}`;
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+      <ToastContainer />
+      <div className="flex flex-wrap gap-4">
+        <div className="w-full sm:w-1/2 lg:w-1/4">
+          <label className="block text-sm font-medium mb-1">Our Hotels</label>
+          <select
+            className="w-full border rounded px-4 py-2"
+            value={hotelId}
+            onChange={(e) => setHotelId(e.target.value)}
+          >
+            <option value="">Select Hotel</option>
+            <option value="6212">Hyphen Noida</option>
+            <option value="6213">Hyphen Grand Haridwar</option>
+            <option value="6214">Hyphen Meerut</option>
+          </select>
+        </div>
+
+        <div className="w-full sm:w-1/2 lg:w-1/4">
+          <label className="block text-sm font-medium mb-1">Check In</label>
+          <input
+            type="date"
+            className="w-full border rounded px-4 py-2"
+            value={checkIn}
+            onChange={(e) => setCheckIn(e.target.value)}
+          />
+        </div>
+
+        <div className="w-full sm:w-1/2 lg:w-1/4">
+          <label className="block text-sm font-medium mb-1">Check Out</label>
+          <input
+            type="date"
+            className="w-full border rounded px-4 py-2"
+            value={checkOut}
+            onChange={(e) => setCheckOut(e.target.value)}
+          />
+        </div>
+
+        <div className="w-full sm:w-1/2 lg:w-1/4 flex items-end">
+          <button
+            className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold w-full py-3 rounded"
+            onClick={handleBookNow}
+          >
+            Book Now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HotelBooking;
